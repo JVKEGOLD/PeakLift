@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+
+# Node / Vite
+WebApp/node_modules/
+WebApp/dist/
+WebApp/*.tsbuildinfo
+WebApp/vite.config.js
+WebApp/vite.config.d.ts
+
+# Environment files
+WebApp/.env
+WebApp/.env.*
+!WebApp/.env.example
+
+# Supabase local runtime
+WebApp/supabase/.branches/
+WebApp/supabase/.temp/
+
+# Xcode
+iOS/**/xcuserdata/
+iOS/**/DerivedData/
+iOS/**/*.xcuserstate
+iOS/**/*.moved-aside
+iOS/**/*.hmap
+iOS/**/*.ipa
+iOS/**/*.dSYM.zip
+iOS/**/*.dSYM
+
+# Build artifacts
+build/
+DerivedData/
+*.log

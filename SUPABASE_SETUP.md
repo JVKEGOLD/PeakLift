@@ -10,6 +10,19 @@ Current public Auth settings checked from `auth/v1/settings`:
 - Apple sign-in: disabled
 - Google sign-in: disabled
 
+Live configuration updated from the Supabase dashboard:
+
+- PRD foundation migration applied successfully.
+- Verified 10 PeakLift PRD tables exist in `public`.
+- Verified 18 seeded exercises exist in `public.exercises`.
+- Site URL changed from `http://localhost:3000` to `peaklift://auth-callback`.
+- Redirect URL save was submitted for:
+  - `peaklift://auth-callback`
+  - `http://localhost:*/**`
+  - `http://127.0.0.1:*/**`
+
+The migration found duplicate `liljakey007` profile usernames in the live database, so duplicate usernames are now normalized before the unique username index is created.
+
 Dashboard links:
 
 - Project dashboard: https://supabase.com/dashboard/project/qwqwctttggwesgqspgrp
@@ -20,19 +33,25 @@ Dashboard links:
 
 ## Required Auth Configuration
 
-Set these before testing a real App Store signup flow:
+Check these before testing a real App Store signup flow:
 
-1. In Auth URL Configuration, set Site URL to the production website URL once one exists. Do not leave it as `http://localhost:3000` for launch.
-2. In Auth URL Configuration, add this Redirect URL exactly:
+1. In Auth URL Configuration, keep Site URL away from `http://localhost:3000`. It is currently set to:
 
    ```text
    peaklift://auth-callback
    ```
 
-3. Keep any local web testing redirect only for development, such as:
+2. In Auth URL Configuration, make sure this Redirect URL exists:
 
    ```text
-   http://localhost:3000/**
+   peaklift://auth-callback
+   ```
+
+3. Keep local web testing redirects only for development, such as:
+
+   ```text
+   http://localhost:*/**
+   http://127.0.0.1:*/**
    ```
 
 4. After the Vercel production deployment exists, add its production URL:
@@ -78,6 +97,27 @@ Security Advisor currently reports:
 - Leaked password protection is disabled and should be enabled in the Supabase dashboard.
 
 Performance Advisor currently reports unused indexes. That is expected while the app has little or no production usage; keep the indexes until real usage data exists.
+
+## PRD Foundation Migration
+
+The PRD-aligned backend foundation is in:
+
+```text
+WebApp/supabase/migrations/20260511120000_peaklift_prd_foundation.sql
+```
+
+Apply it before wiring the next screens. It adds normalized infrastructure for:
+
+- Exercise library and custom exercises
+- Reusable workout templates
+- Program builder tables and active programs
+- Set-level workout logs
+- Automatic personal record tracking from logged sets
+- Follows
+- Shared workouts/programs
+- Profile privacy and training fields
+
+This migration is additive. It keeps the older `routines`, `workout_logs`, likes, comments, and reports tables so the current app keeps working while the new PRD screens are built.
 
 ## Test After Configuration
 

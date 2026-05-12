@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Activity } from "lucide-react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import logoUrl from "../assets/peak-lift-logo.png";
 import { Button, Card, Input } from "../components/ui";
 import { useAuth } from "../context/AuthContext";
 import { defaultAuthProviderSettings, loadAuthProviderSettings } from "../authSettings";
@@ -101,7 +101,7 @@ export default function Login() {
     <div className="login-screen">
       <Card className="login-card">
         <div className="login-mark">
-          <Activity size={30} />
+          <img src={logoUrl} alt="" />
         </div>
         <h1>Peak Lift</h1>
         <p>Track workouts, save routines, share sessions, and keep nutrition in one focused training cockpit.</p>

@@ -34,10 +34,12 @@ export default function Settings() {
         .from("profiles")
         .upsert({
           id: user.uid,
+          name: displayName,
           username: displayName,
           display_name: displayName,
           bio: bio.trim(),
           goal: goal.trim(),
+          training_goal: goal.trim(),
           photo_url: photoURL.trim() || null,
         });
       if (error) throw error;

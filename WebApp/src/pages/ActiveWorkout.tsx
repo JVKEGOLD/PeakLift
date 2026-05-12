@@ -56,7 +56,7 @@ export default function ActiveWorkout() {
     setSaving(true);
     setError("");
     try {
-      const { error: saveError } = await supabase.from("workout_logs").insert({
+      const { data: logRow, error: saveError } = await supabase.from("workout_logs").insert({
         routine_id: routine?.id || null,
         routine_name: routine?.name || "Quick Workout",
         user_id: user.uid,
@@ -67,8 +67,31 @@ export default function ActiveWorkout() {
         exercise_count: exercises.length,
         notes: notes.trim(),
         is_private: !shareToFeed,
-      });
+      }).select("id").single();
       if (saveError) throw saveError;
+
+      const setRows = exercises.flatMap((exercise) =>
+        exercise.sets
+          .map((set, index) => ({
+            workout_log_id: logRow.id,
+            exercise_id: exercise.exerciseId || "",
+            set_number: index + 1,
+            reps: Math.max(0, Number(set.reps) || 0),
+            weight: Math.max(0, Number(set.weight) || 0),
+            rpe: set.rpe ? Number(set.rpe) : null,
+            is_warmup: false,
+            notes: set.notes || "",
+          }))
+          .filter((set) => set.exercise_id && set.reps > 0 && set.weight > 0),
+      );
+
+      if (setRows.length > 0) {
+        const { error: setLogError } = await supabase.from("set_logs").insert(setRows);
+        if (setLogError) {
+          console.warn(friendlyError(setLogError, "Workout saved, but set-level PR tracking is not available yet."));
+        }
+      }
+
       navigate(shareToFeed ? "/feed" : "/dashboard");
     } catch (saveError) {
       setError(friendlyError(saveError, "Unable to finish workout."));

@@ -71,9 +71,13 @@ async function ensureProfile(user: User, username?: string) {
     .from("profiles")
     .insert({
       id: user.id,
+      name: displayName,
       username: displayName,
       display_name: displayName,
       photo_url: userPhoto(user),
+      training_goal: "Build strength consistently",
+      experience_level: "intermediate",
+      privacy_status: "public",
     })
     .select("*")
     .single();
